@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pirotecnica Montescudaio | L'Arte dell'Esplosione</title>
+    <style>
+        /* --- CSS & ANIMAZIONI --- */
+        :root {
+            --bg-color: #050505;
+            --text-color: #f0f0f0;
+            --accent-gold: #ffd700;
+            --accent-red: #ff4500;
+            --accent-blue: #00bfff;
+            --card-bg: #1a1a1a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { background-color: var(--bg-color); color: var(--text-color); overflow-x: hidden; }
+
+        /* Sfondo animato (Stelle/Scintille) */
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1;
+            background: radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px);
+            background-size: 550px 550px;
+            animation: starsMove 100s linear infinite; 
+            opacity: 0.3;
+        }
+        @keyframes starsMove { from {background-position: 0 0;} to {background-position: 1000px 500px;} }
+
+        /* Header */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 20px 50px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+            position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #333;
+        }
+        .logo { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; color: var(--accent-gold); letter-spacing: 2px; }
+        .logo span { color: var(--accent-red); }
+        
+        nav ul { display: flex; list-style: none; gap: 20px; }
+        nav a { text-decoration: none; color: white; transition: 0.3s; font-weight: 500; }
+        nav a:hover { color: var(--accent-gold); }
+
+        .cart-icon { position: relative; cursor: pointer; }
+        .cart-count { 
+            position: absolute; top: -10px; right: -10px; 
+            background: var(--accent-red); color: white; 
+            border-radius: 50%; padding: 2px 6px; font-size: 0.8rem; 
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;
+            text-align: center; position: relative; overflow: hidden;
+        }
+        .hero h1 { font-size: 4rem; margin-bottom: 20px; text-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+        .hero p { font-size: 1.5rem; color: #ccc; max-width: 600px; }
+        .hero-btn {
+            margin-top: 30px; padding: 15px 40px; background: var(--accent-red); 
+            color: white; border: none; font-size: 1.2rem; cursor: pointer; 
+            transition: 0.3s; border-radius: 5px; text-transform: uppercase; letter-spacing: 1px;
+        }
+        .hero-btn:hover { background: var(--accent-gold); color: black; box-shadow: 0 0 30px var(--accent-gold); }
+
+        /* Prodotti */
+        .products-section { padding: 80px 50px; }
+        .section-title { text-align: center; margin-bottom: 60px; font-size: 2.5rem; color: var(--accent-gold); }
+        
+        .products-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; max-width: 1200px; margin: 0 auto;
+        }
+
+        .product-card {
+            background: var(--card-bg); border: 1px solid #333; border-radius: 10px; overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s; position: relative;
+        }
+        .product-card:hover { transform: translateY(-10px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); border-color: var(--accent-gold); }
+        
+        .product-img {
+            height: 200px; background: #222; display: flex; justify-content: center; align-items: center;
+            position: relative; overflow: hidden;
+        }
+        /* Simulazione visuale prodotto con CSS puro per evitare immagini esterne rotte */
+        .firework-visual {
+            width: 60px; height: 100px; background: #444; border-radius: 5px; position: relative;
+        }
+        .visual-fuse { width: 4px; height: 20px; background: #888; position: absolute; top: -20px; left: 50%; transform: translateX(-50%); }
+        .p-tuono .firework-visual { background: linear-gradient(45deg, #003366, #00bfff); }
+        .p-bulldog .firework-visual { background: linear-gradient(45deg, #333, #666); width: 80px; height: 80px; border-radius: 50%; }
+        .p-dumbum .firework-visual { background: linear-gradient(45deg, #111, #333); border: 2px solid var(--accent-red); }
+
+        .product-info { padding: 20px; text-align: center; }
+        .product-title { font-size: 1.5rem; margin-bottom: 10px; color: white; }
+        .product-desc { color: #aaa; margin-bottom: 15px; font-size: 0.9rem; }
+        .product-price { font-size: 1.3rem; color: var(--accent-gold); font-weight: bold; margin-bottom: 15px; display: block; }
+        
+        .add-btn {
+            padding: 10px 20px; background: transparent; border: 2px solid var(--accent-gold); color: var(--accent-gold);
+            cursor: pointer; transition: 0.3s; font-weight: bold; width: 100%;
+        }
+        .add-btn:hover { background: var(--accent-gold); color: black; }
+
+        /* Chi Siamo */
+        .about-section { 
+            padding: 100px 50px; background: #0f0f0f; display: flex; 
+            flex-wrap: wrap; justify-content: center; align-items: center; gap: 50px; 
+        }
+        .about-content { max-width: 600px; }
+        .about-content h2 { color: var(--accent-gold); font-size: 2.5rem; margin-bottom: 20px; }
+        .about-content p { margin-bottom: 20px; line-height: 1.6; color: #ddd; }
+        .signature { font-family: 'Times New Roman', serif; font-style: italic; font-size: 1.5rem; text-align: right; color: var(--accent-red); }
+        
+        .profile-card {
+            width: 300px; height: 400px; background: #1a1a1a; border: 1px solid var(--accent-gold);
+            display: flex; justify-content: center; align-items: center; position: relative;
+        }
+        .profile-card::after { content: "L"; font-size: 15rem; color: rgba(255,215,0,0.1); font-family: serif; }
+
+        /* Modale Carrello */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal-content {
+            background: #1a1a1a; width: 90%; max-width: 500px; padding: 30px; border-radius: 10px;
+            border: 1px solid var(--accent-gold); position: relative;
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #fff; }
+        .cart-items { margin: 20px 0; max-height: 300px; overflow-y: auto; }
+        .cart-item { display: flex; justify-content: space-between; margin-bottom: 10px; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .total-price { font-size: 1.5rem; text-align: right; color: var(--accent-gold); margin-top: 20px; }
+        
+        .pay-btn {
+            width: 100%; padding: 15px; background: #6f2c91; /* Colore Skrill */
+            color: white; border: none; margin-top: 20px; font-weight: bold; cursor: pointer; font-size: 1.1rem;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+        }
+        .pay-btn:hover { background: #5a2375; }
+
+        footer { padding: 40px; text-align: center; background: #000; border-top: 1px solid #333; color: #777; }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5rem; }
+            header { padding: 15px 20px; }
+            nav ul { display: none; } /* Semplificazione per mobile */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="stars"></div>
+
+    <header>
+        <div class="logo">Pirotecnica <span>Montescudaio</span></div>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#prodotti">Prodotti</a></li>
+                <li><a href="#chi-siamo">Chi Siamo</a></li>
+            </ul>
+        </nav>
+        <div class="cart-icon" onclick="toggleCart()">
+            🛒 <span class="cart-count" id="cartCount">0</span>
+        </div>
+    </header>
+
+    <main id="home">
+        <section class="hero">
+            <h1>Accendi la Notte</h1>
+            <p>Potenza. Sicurezza. Spettacolo. Solo per veri intenditori.</p>
+            <button class="hero-btn" onclick="document.getElementById('prodotti').scrollIntoView({behavior: 'smooth'})">Vedi Catalogo</button>
+        </section>
+
+        <section id="prodotti" class="products-section">
+            <h2 class="section-title">I Nostri Bestseller</h2>
+            <div class="products-grid" id="productContainer">
+                </div>
+        </section>
+
+        <section id="chi-siamo" class="about-section">
+            <div class="profile-card">
+                </div>
+            <div class="about-content">
+                <h2>Il Presidente: Signor L</h2>
+                <p>
+                    La storia di <strong>Pirotecnica Montescudaio</strong> non nasce in un ufficio, ma tra l'odore di polvere da sparo e il cielo stellato della Toscana. Il Presidente, noto nell'ambiente solo come <strong>"Signor L"</strong>, ha dedicato oltre 30 anni alla ricerca della detonazione perfetta.
+                </p>
+                <p>
+                    Iniziando come apprendista nelle fabbriche dell'est Europa e poi tornato nel comune di Montescudaio, Signor L ha affinato un'arte quasi dimenticata. "Non vendiamo botti," ama ripetere ai suoi collaboratori, "vendiamo bombe vere e proprie."
+                </p>
+                <p>
+                    Oggi, sotto la sua guida rigorosa, ogni singolo <em>Tuono Blu</em> o <em>Bulldog</em> viene testato per garantire standard di sicurezza e potenza senza compromessi.
+                </p>
+                <div class="signature">- Signor L.</div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Pirotecnica Montescudaio. Vendita riservata ai maggiori di 18 anni.<br>Maneggiare con cura. Non ci assumiamo responsabilità per uso improprio.</p>
+    </footer>
+
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleCart()">&times;</span>
+            <h2>Il tuo Arsenale</h2>
+            <div class="cart-items" id="cartItems">
+                <p style="text-align:center; color:#777;">Il carrello è vuoto.</p>
+            </div>
+            <div class="total-price">Totale: €<span id="cartTotal">0.00</span></div>
+            
+            <form id="skrillForm" action="https://pay.skrill.com" method="post" target="_blank">
+                <input type="hidden" name="pay_to_email" value="INSERISCI_LA_TUA_EMAIL_SKRILL_QUI">
+                
+                <input type="hidden" name="status_url" value="mailto:tuo_email@example.com"> 
+                <input type="hidden" name="language" value="IT">
+                <input type="hidden" name="amount" id="skrillAmount" value="0">
+                <input type="hidden" name="currency" value="EUR">
+                <input type="hidden" name="detail1_description" value="Ordine Pirotecnica Montescudaio">
+                <input type="hidden" name="detail1_text" id="skrillDetails" value="">
+                <input type="hidden" name="return_url" value="https://tuosito.com/grazie"> <input type="hidden" name="cancel_url" value="https://tuosito.com/errore"> <button type="button" class="pay-btn" onclick="processPayment()">
+                    Paga con <strong>Skrill</strong>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        /**
+         * LOGICA APPLICATIVA
+         * Scritta in JS puro per compatibilità immediata, ma strutturata come TS.
+         */
+
+        // Dati Prodotti
+        const products = [
+            {
+                id: 1,
+                name: "Tuono Blu",
+                weight: "20gr",
+                price: 15.00,
+                desc: "Il re della notte. Lampo accecante seguito da un boato profondo.",
+                cssClass: "p-tuono"
+            },
+            {
+                id: 2,
+                name: "Bulldog",
+                weight: "2gr",
+                price: 5.00,
+                desc: "Piccolo ma aggressivo. Ideale per sequenze rapide.",
+                cssClass: "p-bulldog"
+            },
+            {
+                id: 3,
+                name: "DumBum",
+                weight: "5gr",
+                price: 9.50,
+                desc: "Il classico moderno. 120 decibel di pura potenza sonora.",
+                cssClass: "p-dumbum"
+            }
+        ];
+
+        // Stato del Carrello
+        let cart = [];
+
+        // Inizializzazione
+        document.addEventListener('DOMContentLoaded', () => {
+            renderProducts();
+        });
+
+        // Rendering Prodotti
+        function renderProducts() {
+            const container = document.getElementById('productContainer');
+            container.innerHTML = products.map(p => `
+                <div class="product-card ${p.cssClass}">
+                    <div class="product-img">
+                        <div class="firework-visual">
+                            <div class="visual-fuse"></div>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <h3 class="product-title">${p.name} <small>(${p.weight})</small></h3>
+                        <p class="product-desc">${p.desc}</p>
+                        <span class="product-price">€${p.price.toFixed(2)}</span>
+                        <button class="add-btn" onclick="addToCart(${p.id})">AGGIUNGI AL CARRELLO</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Aggiungi al carrello
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            if (product) {
+                cart.push(product);
+                updateCartUI();
+                animateCartIcon();
+            }
+        }
+
+        // Rimuovi dal carrello
+        function removeFromCart(index) {
+            cart.splice(index, 1);
+            updateCartUI();
+        }
+
+        // Aggiorna Interfaccia Carrello
+        function updateCartUI() {
+            document.getElementById('cartCount').innerText = cart.length;
+            
+            const cartItemsContainer = document.getElementById('cartItems');
+            const totalElement = document.getElementById('cartTotal');
+            
+            let total = 0;
+            
+            if (cart.length === 0) {
+                cartItemsContainer.innerHTML = '<p style="text-align:center; color:#777;">Il carrello è vuoto.</p>';
+            } else {
+                cartItemsContainer.innerHTML = cart.map((item, index) => {
+                    total += item.price;
+                    return `
+                        <div class="cart-item">
+                            <div>
+                                <strong>${item.name}</strong> <small>(${item.weight})</small>
+                            </div>
+                            <div>
+                                €${item.price.toFixed(2)}
+                                <span style="color:red; cursor:pointer; margin-left:10px;" onclick="removeFromCart(${index})">✕</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            totalElement.innerText = total.toFixed(2);
+        }
+
+        // Gestione Modale
+        function toggleCart() {
+            const modal = document.getElementById('cartModal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        // Animazione icona carrello
+        function animateCartIcon() {
+            const badge = document.querySelector('.cart-count');
+            badge.style.transform = 'scale(1.5)';
+            setTimeout(() => badge.style.transform = 'scale(1)', 200);
+        }
+
+        // Processo di Pagamento Skrill
+        function processPayment() {
+            if (cart.length === 0) {
+                alert("Il carrello è vuoto!");
+                return;
+            }
+
+            const totalAmount = cart.reduce((sum, item) => sum + item.price, 0).toFixed(2);
+            const description = cart.map(item => `${item.name} (${item.weight})`).join(', ');
+
+            // Compila i campi nascosti del form Skrill
+            document.getElementById('skrillAmount').value = totalAmount;
+            document.getElementById('skrillDetails').value = description;
+
+            // Controllo sicurezza email (avviso per l'utente)
+            const emailField = document.querySelector('input[name="pay_to_email"]').value;
+            if(emailField.includes("INSERISCI_LA_TUA")) {
+                alert("ATTENZIONE: Devi configurare l'email Skrill nel codice HTML prima di procedere.");
+                return;
+            }
+
+            // Invia il form
+            document.getElementById('skrillForm').submit();
+        }
+
+        // Chiudi modale cliccando fuori
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
